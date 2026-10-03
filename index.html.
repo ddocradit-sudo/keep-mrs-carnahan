@@ -1,1 +1,531 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Keep Mrs. Carnahan at EWMS</title>
+
+<style>
+:root {
+  --blue: #173b63;
+  --light-blue: #eef5fb;
+  --text: #222;
+  --border: #d6dce3;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text);
+  background: #f7f7f7;
+  line-height: 1.6;
+}
+
+header {
+  background: var(--blue);
+  color: white;
+  text-align: center;
+  padding: 42px 20px;
+}
+
+header h1 {
+  margin: 0 0 8px;
+  font-size: 2.2rem;
+}
+
+header p {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+main {
+  max-width: 900px;
+  margin: 28px auto;
+  padding: 0 18px 50px;
+}
+
+section {
+  background: white;
+  padding: 28px;
+  margin-bottom: 22px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+h2 {
+  color: var(--blue);
+  margin-top: 0;
+}
+
+.highlight {
+  background: var(--light-blue);
+  border-left: 5px solid var(--blue);
+  padding: 16px 18px;
+  margin: 18px 0;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin: 14px 0 6px;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid #bfc7d0;
+  border-radius: 5px;
+  font: inherit;
+}
+
+textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+
+button {
+  margin-top: 16px;
+  padding: 11px 18px;
+  border: 0;
+  border-radius: 5px;
+  background: var(--blue);
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.notice {
+  font-size: 0.9rem;
+  color: #555;
+  margin-top: 10px;
+}
+
+.count {
+  font-size: 1.8rem;
+  font-weight: bold;
+  color: var(--blue);
+  margin-bottom: 12px;
+}
+
+.signature {
+  border-top: 1px solid #ddd;
+  padding: 12px 0;
+}
+
+.signature strong {
+  color: var(--blue);
+}
+
+#message {
+  display: none;
+  margin-top: 15px;
+  padding: 12px;
+  background: #e9f5e9;
+  border: 1px solid #b9d8b9;
+  border-radius: 5px;
+}
+
+footer {
+  text-align: center;
+  color: #666;
+  font-size: 0.9rem;
+  padding: 10px 20px 35px;
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <h1>Keep Mrs. Carnahan at EWMS</h1>
+  <p>Supporting the East Whittier Middle School music community</p>
+</header>
+
+<main>
+
+<!-- HISTORY / ABOUT SECTION -->
+
+<section>
+
+  <h2>A Lasting Impact</h2>
+
+  <p>
+    When Mrs. Carnahan began working with the EWMS music program, it was a much
+    smaller program with relatively few students. Over the years, through her
+    dedication, teaching, and commitment to her students, she helped the program
+    grow into the thriving music program it is today.
+  </p>
+
+  <p>
+    For more than 40 years, Mrs. Carnahan has been an important part of the EWMS
+    music community. During that time, she has helped introduce countless
+    students to music, encouraged students to participate, and created
+    opportunities for them to learn, perform, and grow.
+  </p>
+
+  <p>
+    Her work has helped make the EWMS music program a meaningful part of the
+    school community. Many students have been drawn to the program because of
+    the positive environment she has helped create and the enthusiasm she brings
+    to music education.
+  </p>
+
+  <h2>Why the Music Program Matters</h2>
+
+  <p>
+    The EWMS music program gives students opportunities to:
+  </p>
+
+  <ul>
+    <li>Learn and perform music.</li>
+    <li>Develop their musical skills and confidence.</li>
+    <li>Work together as an ensemble.</li>
+    <li>Build friendships and a sense of community.</li>
+    <li>Continue their interest in music throughout middle school and beyond.</li>
+  </ul>
+
+  <p>
+    Mrs. Carnahan's many years of dedication have played an important role in
+    helping the EWMS music program reach the level it is at today.
+  </p>
+
+</section>
+
+
+<!-- SUPPORT SECTION -->
+
+<section>
+
+  <h2>Show Your Support</h2>
+
+  <div class="count">
+    <span id="count">Loading...</span> supporters
+  </div>
+
+  <p>
+    Add your name and, if you want, a short reason you value Mrs. Carnahan
+    and the EWMS music program.
+  </p>
+
+  <form id="supportForm">
+
+    <label for="name">Your name</label>
+
+    <input
+      id="name"
+      name="name"
+      type="text"
+      maxlength="80"
+      required
+    >
+
+    <label for="reason">
+      Why should Mrs. Carnahan stay?
+    </label>
+
+    <textarea
+      id="reason"
+      name="reason"
+      maxlength="500"
+      placeholder="Share a positive experience, memory, or reason..."
+    ></textarea>
+
+    <button type="submit">
+      I Support Keeping Mrs. Carnahan
+    </button>
+
+    <div id="message"></div>
+
+  </form>
+
+  <p class="notice">
+    Please don't submit private information such as your address,
+    phone number, email address, or other sensitive information.
+    Submitted names and comments may be visible on this page.
+  </p>
+
+</section>
+
+
+<!-- COMMUNITY SUPPORT -->
+
+<section>
+
+  <h2>Community Support</h2>
+
+  <div id="signatures">
+    Loading signatures...
+  </div>
+
+</section>
+
+
+<!-- RESPECT SECTION -->
+
+<section>
+
+  <h2>Keep It Respectful</h2>
+
+  <p>
+    This page is intended to express support, not to attack or harass anyone.
+    Please keep comments factual, respectful, and focused on students, music,
+    and the value of the EWMS music program.
+  </p>
+
+</section>
+
+</main>
+
+
+<footer>
+  East Whittier Middle School • Whittier, California
+</footer>
+
+
+<script>
+
+/*
+  IMPORTANT:
+
+  After you create your Google Apps Script web app,
+  replace the text below with your Web App URL.
+
+  It should look something like:
+
+  https://script.google.com/macros/s/XXXXXXXXXXXX/exec
+*/
+
+const API_URL = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
+
+
+const form = document.getElementById("supportForm");
+
+const message = document.getElementById("message");
+
+
+/*
+  Load signatures from Google Sheets
+*/
+
+async function loadSignatures() {
+
+  if (API_URL.startsWith("PASTE_")) {
+
+    document.getElementById("count").textContent = "0";
+
+    document.getElementById("signatures").textContent =
+      "The petition database has not been connected yet.";
+
+    return;
+  }
+
+  try {
+
+    const response = await fetch(API_URL);
+
+    const data = await response.json();
+
+    document.getElementById("count").textContent =
+      data.signatures.length;
+
+
+    const signatures = document.getElementById("signatures");
+
+
+    if (data.signatures.length === 0) {
+
+      signatures.innerHTML =
+        "<p>No signatures yet. Be the first!</p>";
+
+      return;
+    }
+
+
+    signatures.innerHTML =
+      data.signatures.map(function(signature) {
+
+        return `
+          <div class="signature">
+            <strong>${escapeHtml(signature.name)}</strong>
+
+            ${
+              signature.reason
+              ? `<br>${escapeHtml(signature.reason)}`
+              : ""
+            }
+
+          </div>
+        `;
+
+      }).join("");
+
+  }
+
+  catch (error) {
+
+    document.getElementById("count").textContent = "—";
+
+    document.getElementById("signatures").textContent =
+      "Signatures are temporarily unavailable.";
+
+  }
+
+}
+
+
+/*
+  Submit a new signature
+*/
+
+form.addEventListener("submit", async function(event) {
+
+  event.preventDefault();
+
+
+  if (API_URL.startsWith("PASTE_")) {
+
+    message.style.display = "block";
+
+    message.textContent =
+      "The petition database hasn't been connected yet.";
+
+    return;
+  }
+
+
+  const button = form.querySelector("button");
+
+
+  button.disabled = true;
+
+  button.textContent = "Submitting...";
+
+
+  try {
+
+    const name =
+      document.getElementById("name").value.trim();
+
+    const reason =
+      document.getElementById("reason").value.trim();
+
+
+    const body = new URLSearchParams({
+
+      name: name,
+
+      reason: reason
+
+    });
+
+
+    const response = await fetch(API_URL, {
+
+      method: "POST",
+
+      body: body
+
+    });
+
+
+    const data = await response.json();
+
+
+    if (!data.success) {
+
+      throw new Error(
+        data.error || "Submission failed"
+      );
+
+    }
+
+
+    message.style.display = "block";
+
+    message.textContent =
+      "Thank you! Your support has been recorded.";
+
+
+    form.reset();
+
+
+    await loadSignatures();
+
+  }
+
+  catch (error) {
+
+    message.style.display = "block";
+
+    message.textContent =
+      "Sorry, the submission could not be saved. Please try again.";
+
+  }
+
+  finally {
+
+    button.disabled = false;
+
+    button.textContent =
+      "I Support Keeping Mrs. Carnahan";
+
+  }
+
+});
+
+
+/*
+  Prevent submitted text from being interpreted as HTML.
+*/
+
+function escapeHtml(value) {
+
+  return value.replace(/[&<>"']/g, function(character) {
+
+    return {
+
+      "&": "&amp;",
+
+      "<": "&lt;",
+
+      ">": "&gt;",
+
+      '"': "&quot;",
+
+      "'": "&#039;"
+
+    }[character];
+
+  });
+
+}
+
+
+/*
+  Load signatures when the page opens.
+*/
+
+loadSignatures();
+
+</script>
+
+</body>
+</html>
+```
 
