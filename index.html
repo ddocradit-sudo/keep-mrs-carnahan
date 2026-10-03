@@ -159,8 +159,6 @@ footer {
 
 <main>
 
-<!-- HISTORY / ABOUT SECTION -->
-
 <section>
 
   <h2>A Lasting Impact</h2>
@@ -207,8 +205,6 @@ footer {
 
 </section>
 
-
-<!-- SUPPORT SECTION -->
 
 <section>
 
@@ -263,8 +259,6 @@ footer {
 </section>
 
 
-<!-- COMMUNITY SUPPORT -->
-
 <section>
 
   <h2>Community Support</h2>
@@ -275,8 +269,6 @@ footer {
 
 </section>
 
-
-<!-- RESPECT SECTION -->
 
 <section>
 
@@ -302,16 +294,14 @@ footer {
 
 /*
   IMPORTANT:
+  Put your Google Apps Script Web App URL between the quotes below.
 
-  After you create your Google Apps Script web app,
-  replace the text below with your Web App URL.
+  Example:
 
-  It should look something like:
-
-  https://script.google.com/macros/s/XXXXXXXXXXXX/exec
+  const API_URL = "https://script.google.com/macros/s/ABC123/exec";
 */
 
-const API_URL = https://script.google.com/macros/s/AKfycbw_UqZ4Tt079Z7Xi703mns7hkAUB09D3NjVBDt527kWWEKPZW9nNUp0JVJ140gTKtDLQw/exec
+const API_URL = "PASTE_YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
 
 
 const form = document.getElementById("supportForm");
@@ -345,7 +335,8 @@ async function loadSignatures() {
       data.signatures.length;
 
 
-    const signatures = document.getElementById("signatures");
+    const signatures =
+      document.getElementById("signatures");
 
 
     if (data.signatures.length === 0) {
@@ -409,122 +400,9 @@ form.addEventListener("submit", async function(event) {
   }
 
 
-  const button = form.querySelector("button");
+  const button =
+    form.querySelector("button");
 
 
-  button.disabled = true;
-
-  button.textContent = "Submitting...";
-
-
-  try {
-
-    const name =
-      document.getElementById("name").value.trim();
-
-    const reason =
-      document.getElementById("reason").value.trim();
-
-
-    const body = new URLSearchParams({
-
-      name: name,
-
-      reason: reason
-
-    });
-
-
-    const response = await fetch(API_URL, {
-
-      method: "POST",
-
-      body: body
-
-    });
-
-
-    const data = await response.json();
-
-
-    if (!data.success) {
-
-      throw new Error(
-        data.error || "Submission failed"
-      );
-
-    }
-
-
-    message.style.display = "block";
-
-    message.textContent =
-      "Thank you! Your support has been recorded.";
-
-
-    form.reset();
-
-
-    await loadSignatures();
-
-  }
-
-  catch (error) {
-
-    message.style.display = "block";
-
-    message.textContent =
-      "Sorry, the submission could not be saved. Please try again.";
-
-  }
-
-  finally {
-
-    button.disabled = false;
-
-    button.textContent =
-      "I Support Keeping Mrs. Carnahan";
-
-  }
-
-});
-
-
-/*
-  Prevent submitted text from being interpreted as HTML.
-*/
-
-function escapeHtml(value) {
-
-  return value.replace(/[&<>"']/g, function(character) {
-
-    return {
-
-      "&": "&amp;",
-
-      "<": "&lt;",
-
-      ">": "&gt;",
-
-      '"': "&quot;",
-
-      "'": "&#039;"
-
-    }[character];
-
-  });
-
-}
-
-
-/*
-  Load signatures when the page opens.
-*/
-
-loadSignatures();
-
-</script>
-
-</body>
-</html>
+  button.di
 ```
