@@ -1,0 +1,114 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Keep Mrs. Carnahan at EWMS</title>
+
+<style>
+:root {
+  --blue: #173b63;
+  --light-blue: #eef5fb;
+  --text: #222;
+  --border: #d6dce3;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, Helvetica, sans-serif;
+  color: var(--text);
+  background: #f7f7f7;
+  line-height: 1.6;
+}
+
+header {
+  background: var(--blue);
+  color: white;
+  text-align: center;
+  padding: 42px 20px;
+}
+
+header h1 {
+  margin: 0 0 8px;
+  font-size: 2.2rem;
+}
+
+header p {
+  margin: 0;
+  font-size: 1.05rem;
+}
+
+main {
+  max-width: 900px;
+  margin: 28px auto;
+  padding: 0 18px 50px;
+}
+
+section {
+  background: white;
+  padding: 28px;
+  margin-bottom: 22px;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+}
+
+h2 {
+  color: var(--blue);
+  margin-top: 0;
+}
+
+.highlight {
+  background: var(--light-blue);
+  border-left: 5px solid var(--blue);
+  padding: 16px 18px;
+  margin: 18px 0;
+}
+
+label {
+  display: block;
+  font-weight: bold;
+  margin: 14px 0 6px;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 11px;
+  border: 1px solid #bfc7d0;
+  border-radius: 5px;
+  font: inherit;
+}
+
+textarea {
+  min-height: 130px;
+  resize: vertical;
+}
+
+button {
+  margin-top: 16px;
+  padding: 11px 18px;
+  border: 0;
+  border-radius: 5px;
+  background: var(--blue);
+  color: white;
+  font-size: 1rem;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.notice
+```
