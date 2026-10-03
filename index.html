@@ -63,13 +63,6 @@ h2 {
   margin-top: 0;
 }
 
-.highlight {
-  background: var(--light-blue);
-  border-left: 5px solid var(--blue);
-  padding: 16px 18px;
-  margin: 18px 0;
-}
-
 label {
   display: block;
   font-weight: bold;
@@ -293,12 +286,18 @@ footer {
 <script>
 
 /*
-  IMPORTANT:
-  Put your Google Apps Script Web App URL between the quotes below.
+====================================================
+GOOGLE APPS SCRIPT URL
+====================================================
 
-  Example:
+PASTE YOUR ACTUAL Google Apps Script Web App URL
+between the quotation marks below.
 
-  const API_URL = "https://script.google.com/macros/s/ABC123/exec";
+It should end with /exec
+
+Example:
+
+const API_URL = "https://script.google.com/macros/s/ABC123/exec";
 */
 
 const API_URL = "https://script.google.com/macros/s/AKfycbw_UqZ4Tt079Z7Xi703mns7hkAUB09D3NjVBDt527kWWEKPZW9nNUp0JVJ140gTKtDLQw/exec";
@@ -310,26 +309,60 @@ const message = document.getElementById("message");
 
 
 /*
-  Load signatures from Google Sheets
+====================================================
+LOAD SIGNATURES
+====================================================
 */
 
 async function loadSignatures() {
+
+  /*
+    If the Google Apps Script URL hasn't been entered,
+    show a clear message instead of staying on Loading.
+  */
 
   if (API_URL.startsWith("PASTE_")) {
 
     document.getElementById("count").textContent = "0";
 
-    document.getElementById("signatures").textContent =
-      "The petition database has not been connected yet.";
+    document.getElementById("signatures").innerHTML =
+      "<p>The petition database has not been connected yet.</p>";
 
     return;
   }
+
 
   try {
 
     const response = await fetch(API_URL);
 
+
+    if (!response.ok) {
+
+      throw new Error(
+        "Google Apps Script returned HTTP " +
+        response.status
+      );
+
+    }
+
+
     const data = await response.json();
+
+
+    /*
+      Make sure Google returned the information
+      our website expects.
+    */
+
+    if (!data.signatures) {
+
+      throw new Error(
+        "The Google Apps Script response did not contain a signatures list."
+      );
+
+    }
+
 
     document.getElementById("count").textContent =
       data.signatures.length;
@@ -338,6 +371,10 @@ async function loadSignatures() {
     const signatures =
       document.getElementById("signatures");
 
+
+    /*
+      If there are no signatures yet.
+    */
 
     if (data.signatures.length === 0) {
 
@@ -348,12 +385,19 @@ async function loadSignatures() {
     }
 
 
+    /*
+      Display all signatures.
+    */
+
     signatures.innerHTML =
       data.signatures.map(function(signature) {
 
         return `
           <div class="signature">
-            <strong>${escapeHtml(signature.name)}</strong>
+
+            <strong>
+              ${escapeHtml(signature.name)}
+            </strong>
 
             ${
               signature.reason
@@ -366,14 +410,24 @@ async function loadSignatures() {
 
       }).join("");
 
-  }
 
-  catch (error) {
+  } catch (error) {
 
-    document.getElementById("count").textContent = "—";
+    /*
+      IMPORTANT:
+      Instead of silently staying on Loading,
+      show the actual error.
+    */
 
-    document.getElementById("signatures").textContent =
-      "Signatures are temporarily unavailable.";
+    document.getElementById("count").textContent =
+      "ERROR";
+
+
+    document.getElementById("signatures").innerHTML =
+      "<p>There was a problem connecting to the petition database.</p>" +
+      "<p><strong>Error:</strong> " +
+      escapeHtml(String(error)) +
+      "</p>";
 
   }
 
@@ -381,28 +435,221 @@ async function loadSignatures() {
 
 
 /*
-  Submit a new signature
+====================================================
+SUBMIT A SIGNATURE
+====================================================
 */
 
-form.addEventListener("submit", async function(event) {
+form.addEventListener(
+  "submit",
+  async function(event) {
 
-  event.preventDefault();
+    event.preventDefault();
 
 
-  if (API_URL.startsWith("PASTE_")) {
+    /*
+      Check whether the Google URL has been entered.
+    */
 
-    message.style.display = "block";
+    if (API_URL.startsWith("PASTE_")) {
 
-    message.textContent =
-      "The petition database hasn't been connected yet.";
+      message.style.display = "block";
 
-    return;
+      message.textContent =
+        "The petition database hasn't been connected yet.";
+
+      return;
+    }
+
+
+    const button =
+      form.querySelector("button");
+
+
+    button.disabled = true;
+
+    button.textContent =
+      "Submitting...";
+
+
+    const name =
+      document.getElementById("name")
+        .value
+        .trim();
+
+
+    const reason =
+      document.getElementById("reason")
+        .value
+        .trim();
+
+
+    /*
+      Make sure the name isn't empty.
+    */
+
+    if (!name) {
+
+      message.style.display = "block";
+
+      message.textContent =
+        "Please enter your name.";
+
+      button.disabled = false;
+
+      button.textContent =
+        "I Support Keeping Mrs. Carnahan";
+
+      return;
+    }
+
+
+    try {
+
+      /*
+        Create the information that will be sent
+        to Google Apps Script.
+      */
+
+      const body =
+        new URLSearchParams();
+
+
+      body.append(
+        "name",
+        name
+      );
+
+
+      body.append(
+        "reason",
+        reason
+      );
+
+
+      /*
+        Send the submission to Google Apps Script.
+
+        no-cors allows the request to be sent from
+        GitHub Pages to Google Apps Script.
+      */
+
+      await fetch(API_URL, {
+
+        method: "POST",
+
+        mode: "no-cors",
+
+        body: body
+
+      });
+
+
+      /*
+        Give Google a moment to save the submission.
+      */
+
+      await new Promise(function(resolve) {
+
+        setTimeout(
+          resolve,
+          1000
+        );
+
+      });
+
+
+      message.style.display = "block";
+
+      message.textContent =
+        "Thank you! Your support has been recorded.";
+
+
+      form.reset();
+
+
+      /*
+        Reload the signatures and supporter count.
+      */
+
+      await loadSignatures();
+
+
+    } catch (error) {
+
+      message.style.display = "block";
+
+      message.textContent =
+        "Sorry, the submission could not be saved.";
+
+
+      /*
+        Also show the error in the browser console
+        for troubleshooting.
+      */
+
+      console.error(
+        "Petition submission error:",
+        error
+      );
+
+    }
+
+
+    button.disabled = false;
+
+    button.textContent =
+      "I Support Keeping Mrs. Carnahan";
+
   }
+);
 
 
-  const button =
-    form.querySelector("button");
+/*
+====================================================
+SECURITY
+====================================================
+
+Prevent names and comments from being interpreted
+as HTML.
+*/
+
+function escapeHtml(value) {
+
+  return value.replace(
+    /[&<>"']/g,
+    function(character) {
+
+      return {
+
+        "&": "&amp;",
+
+        "<": "&lt;",
+
+        ">": "&gt;",
+
+        '"': "&quot;",
+
+        "'": "&#039;"
+
+      }[character];
+
+    }
+  );
+
+}
 
 
-  button.di
+/*
+====================================================
+START
+====================================================
+*/
+
+loadSignatures();
+
+</script>
+
+</body>
+</html>
 ```
