@@ -63,6 +63,13 @@ h2 {
   margin-top: 0;
 }
 
+.highlight {
+  background: var(--light-blue);
+  border-left: 5px solid var(--blue);
+  padding: 16px 18px;
+  margin: 18px 0;
+}
+
 label {
   display: block;
   font-weight: bold;
@@ -114,15 +121,6 @@ button:disabled {
   font-weight: bold;
   color: var(--blue);
   margin-bottom: 12px;
-}
-
-.signature {
-  border-top: 1px solid #ddd;
-  padding: 12px 0;
-}
-
-.signature strong {
-  color: var(--blue);
 }
 
 #message {
@@ -204,7 +202,7 @@ footer {
   <h2>Show Your Support</h2>
 
   <div class="count">
-    <span id="count">Loading...</span> supporters
+    <span id="count">0</span> supporters
   </div>
 
   <p>
@@ -244,9 +242,8 @@ footer {
   </form>
 
   <p class="notice">
-    Please don't submit private information such as your address,
-    phone number, email address, or other sensitive information.
-    Submitted names and comments may be visible on this page.
+    Your response is not stored or published. Only the supporter count
+    is kept on this device.
   </p>
 
 </section>
@@ -254,11 +251,12 @@ footer {
 
 <section>
 
-  <h2>Community Support</h2>
+  <h2>Thank You for Your Support</h2>
 
-  <div id="signatures">
-    Loading signatures...
-  </div>
+  <p>
+    Every expression of support shows how much the EWMS music community
+    means to its students and families.
+  </p>
 
 </section>
 
@@ -287,244 +285,98 @@ footer {
 
 /*
 ====================================================
-GOOGLE APPS SCRIPT URL
+LOCAL SUPPORTER COUNT
 ====================================================
 
-Replace the text inside the quotes with your
-Google Apps Script Web App URL.
+There is NO Google Sheet and NO external database.
 
-It should end with /exec.
+The count is stored only in this browser/device.
 */
 
-const API_URL = "";
-https://script.google.com/macros/s/AKfycbw_UqZ4Tt079Z7Xi703mns7hkAUB09D3NjVBDt527kWWEKPZW9nNUp0JVJ140gTKtDLQw/exec
+const COUNT_KEY =
+  "ewms_mrs_carnahan_supporters";
+
 
 const form =
   document.getElementById("supportForm");
+
 
 const message =
   document.getElementById("message");
 
 
+const countElement =
+  document.getElementById("count");
+
+
 /*
 ====================================================
-LOAD SIGNATURES USING JSONP
+GET CURRENT COUNT
 ====================================================
 */
 
-function loadSignatures() {
+function getCount() {
 
-  if (API_URL.startsWith("PASTE_")) {
+  const savedCount =
+    localStorage.getItem(COUNT_KEY);
 
-    document.getElementById("count").textContent =
-      "0";
 
-    document.getElementById("signatures").innerHTML =
-      "<p>The petition database has not been connected yet.</p>";
+  if (savedCount === null) {
 
-    return;
+    return 0;
+
   }
 
 
-  /*
-    Create a unique callback name.
-  */
-
-  const callbackName =
-    "petitionCallback_" +
-    Date.now();
+  const number =
+    parseInt(
+      savedCount,
+      10
+    );
 
 
-  /*
-    Create the callback function that Google
-    Apps Script will call.
-  */
+  if (isNaN(number)) {
 
-  window[callbackName] =
-    function(data) {
+    return 0;
 
-      try {
-
-        if (!data || !data.signatures) {
-
-          throw new Error(
-            "Invalid response from petition database."
-          );
-
-        }
+  }
 
 
-        document.getElementById("count").textContent =
-          data.signatures.length;
-
-
-        const signatures =
-          document.getElementById("signatures");
-
-
-        if (data.signatures.length === 0) {
-
-          signatures.innerHTML =
-            "<p>No signatures yet. Be the first!</p>";
-
-        } else {
-
-          signatures.innerHTML =
-            data.signatures
-              .map(function(signature) {
-
-                return `
-                  <div class="signature">
-
-                    <strong>
-                      ${escapeHtml(signature.name)}
-                    </strong>
-
-                    ${
-                      signature.reason
-                      ? `<br>${escapeHtml(signature.reason)}`
-                      : ""
-                    }
-
-                  </div>
-                `;
-
-              })
-              .join("");
-
-        }
-
-
-      } catch (error) {
-
-        showLoadError(error);
-
-      }
-
-
-      /*
-        Remove the temporary callback.
-      */
-
-      delete window[callbackName];
-
-    };
-
-
-  /*
-    Create a script tag.
-
-    This avoids the browser CORS problem.
-  */
-
-  const script =
-    document.createElement("script");
-
-
-  script.src =
-    API_URL +
-    "?callback=" +
-    encodeURIComponent(callbackName);
-
-
-  script.onerror =
-    function() {
-
-      showLoadError(
-        new Error(
-          "Could not connect to Google Apps Script."
-        )
-      );
-
-      delete window[callbackName];
-
-    };
-
-
-  document.body.appendChild(script);
-
-
-  /*
-    If Google doesn't respond within 10 seconds,
-    show an error instead of staying on Loading.
-  */
-
-  setTimeout(function() {
-
-    if (window[callbackName]) {
-
-      showLoadError(
-        new Error(
-          "The petition database did not respond."
-        )
-      );
-
-      delete window[callbackName];
-
-    }
-
-  }, 10000);
+  return number;
 
 }
 
 
 /*
 ====================================================
-DISPLAY A LOAD ERROR
+DISPLAY COUNT
 ====================================================
 */
 
-function showLoadError(error) {
+function displayCount() {
 
-  document.getElementById("count").textContent =
-    "ERROR";
-
-
-  document.getElementById("signatures").innerHTML =
-    "<p>There was a problem connecting to the petition database.</p>" +
-    "<p><strong>Error:</strong> " +
-    escapeHtml(String(error)) +
-    "</p>";
+  countElement.textContent =
+    getCount();
 
 }
 
 
 /*
 ====================================================
-SUBMIT SIGNATURE
+SUBMIT SUPPORT
 ====================================================
 */
 
 form.addEventListener(
   "submit",
-  async function(event) {
+  function(event) {
 
     event.preventDefault();
 
 
-    if (API_URL.startsWith("PASTE_")) {
-
-      message.style.display =
-        "block";
-
-      message.textContent =
-        "The petition database hasn't been connected yet.";
-
-      return;
-    }
-
-
-    const button =
-      form.querySelector("button");
-
-
-    button.disabled =
-      true;
-
-
-    button.textContent =
-      "Submitting...";
-
+    /*
+      Make sure a name was entered.
+    */
 
     const name =
       document
@@ -533,156 +385,71 @@ form.addEventListener(
         .trim();
 
 
-    const reason =
-      document
-        .getElementById("reason")
-        .value
-        .trim();
-
-
     if (!name) {
 
-      message.style.display =
-        "block";
-
-      message.textContent =
-        "Please enter your name.";
-
-      button.disabled =
-        false;
-
-      button.textContent =
-        "I Support Keeping Mrs. Carnahan";
-
       return;
-    }
-
-
-    try {
-
-      const body =
-        new URLSearchParams();
-
-
-      body.append(
-        "name",
-        name
-      );
-
-
-      body.append(
-        "reason",
-        reason
-      );
-
-
-      /*
-        Send the submission to Google Apps Script.
-      */
-
-      await fetch(
-        API_URL,
-        {
-          method: "POST",
-          mode: "no-cors",
-          body: body
-        }
-      );
-
-
-      /*
-        Give Google time to save the row.
-      */
-
-      await new Promise(
-        function(resolve) {
-
-          setTimeout(
-            resolve,
-            1000
-          );
-
-        }
-      );
-
-
-      message.style.display =
-        "block";
-
-
-      message.textContent =
-        "Thank you! Your support has been recorded.";
-
-
-      form.reset();
-
-
-      /*
-        Reload the supporter count.
-      */
-
-      loadSignatures();
-
-
-    } catch (error) {
-
-      message.style.display =
-        "block";
-
-
-      message.textContent =
-        "Sorry, the submission could not be saved.";
-
-
-      console.error(
-        "Petition submission error:",
-        error
-      );
 
     }
 
 
-    button.disabled =
-      false;
+    /*
+      Increase the local supporter count.
+    */
+
+    const newCount =
+      getCount() + 1;
 
 
-    button.textContent =
-      "I Support Keeping Mrs. Carnahan";
+    localStorage.setItem(
+      COUNT_KEY,
+      newCount
+    );
+
+
+    /*
+      Update the number immediately.
+    */
+
+    countElement.textContent =
+      newCount;
+
+
+    /*
+      The name and reason are NOT saved.
+      Clear the form immediately.
+    */
+
+    form.reset();
+
+
+    /*
+      Show confirmation.
+    */
+
+    message.style.display =
+      "block";
+
+
+    message.textContent =
+      "Thank you for your support!";
+
+
+    /*
+      Hide the confirmation after a few seconds.
+    */
+
+    setTimeout(
+      function() {
+
+        message.style.display =
+          "none";
+
+      },
+      4000
+    );
 
   }
 );
-
-
-/*
-====================================================
-SECURITY
-====================================================
-*/
-
-function escapeHtml(value) {
-
-  return value.replace(
-    /[&<>"']/g,
-    function(character) {
-
-      return {
-
-        "&": "&amp;",
-
-        "<": "&lt;",
-
-        ">": "&gt;",
-
-        '"': "&quot;",
-
-        "'": "&#039;"
-
-      }[character];
-
-    }
-  );
-
-}
 
 
 /*
@@ -691,7 +458,7 @@ START
 ====================================================
 */
 
-loadSignatures();
+displayCount();
 
 </script>
 
